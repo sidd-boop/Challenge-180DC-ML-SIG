@@ -1,72 +1,61 @@
 Link: <mark> (https://youtu.be/YozrJlcCEeU) </mark>
+
 AI Legal Debate System: Project Report
-1. Introduction
-The AI Legal Debate System is an interactive web application designed to simulate a courtroom battle between two distinct AI-powered lawyers. The project's goal was to create an engaging and educational experience by contrasting a data-driven, factual legal style with a creative, unpredictable, and often absurd one. The user takes on the role of the Judge, initiating cases, guiding the debate, and ultimately deciding the winner. This report details the system's architecture, core features, user workflow, and the challenges overcome during its development.
 
-2. System Architecture
-The application is built on a modern, decoupled client-server architecture to ensure modularity and scalability.
-
-Backend (FastAPI): A high-performance Python web framework, FastAPI, was chosen for the backend. It manages all core logic, including session management, AI model interactions, and the complex RAG (Retrieval-Augmented Generation) pipeline. Its asynchronous capabilities and automatic API documentation make it ideal for this application.
-
-Frontend (Streamlit): A user-friendly Python library, Streamlit, was used to build the interactive frontend. It allows for rapid development of data-centric applications and provides a clean, intuitive interface for the user to act as the Judge. The frontend is a pure client; it holds no game logic and communicates with the backend exclusively through API calls.
+Introduction The AI Legal Debate System is a web-based, interactive application created to stage a virtual courtroom duel between two different AI-powered attorneys. The objective of the project was to provide a fascinating and enlightening experience by pitting a factual, data-driven style of law against a creative, unpredictable, and frequently absurd one. The Judge plays the role of the user, opening cases, steering the argument, and determining the winner in the end. This report outlines the architecture of the system, its main features, user workflow, and the hurdles it bridged to come into existence.
 
 
-3. Core Features
-The application is built around a set of powerful and interactive features that bring the courtroom simulation to life.
 
-a) The Dueling AI Lawyers
-RAG Lawyer (The Defense): This AI is designed to be a meticulous, data-driven legal expert. It uses a sophisticated RAG pipeline to ground its arguments in factual evidence retrieved from a knowledge base of legal cases. Its arguments are logical, structured, and always cite precedents.
+Backend (FastAPI): A fast Python web framework, FastAPI, was selected for the backend. It handles all major logic, such as session management, AI model interactions, and the intricate RAG (Retrieval-Augmented Generation) pipeline. Its asynchronous nature and automatic API documentation make it the perfect choice for this application.
 
-Chaos Lawyer (The Prosecution): This AI is the creative and unpredictable foil to the RAG Lawyer. It does not use any retrieval. Instead, it relies on generating absurd, exaggerated, and often hilarious arguments based on wild rhetoric and invented legal twists, aiming to win by confusing and entertaining the Judge.
+Frontend (Streamlit): Streamlit,  was utilized to create the interactive frontend. It provides fast development of data-driven applications and a clean and simple interface for the user to perform the role of the Judge. The frontend is purely a client; it does not contain any game logic and only interacts with the backend via API calls.
+
+Core Features The application is centered on a collection of robust and interactive features that give the courtroom simulation life.
+a) The Dueling AI Lawyers RAG Lawyer (The Defense): This lawyer is programmed as a careful, fact-based legal specialist. It employs a cutting-edge RAG pipeline for basing its arguments on factual evidence obtained from a database of legal cases. Its arguments are rational, organized, and always referenced with precedents.
+
+Chaos Lawyer (The Prosecution): This AI is the imaginative and erratic opposite of the RAG Lawyer. It makes no use of any retrieval. It depends instead on producing ridiculous, overblown, and frequently laughable arguments founded on wild rhetoric and made-up legal angles and tries to win through bamboozling and amusing the Judge.
 
 b) Advanced RAG Pipeline with Metadata Filtering
-The RAG Lawyer's effectiveness is powered by a multi-stage retrieval system:
+The success of the RAG Lawyer is fueled by a multi-stage retrieval system:
 
-Data Enrichment: A preliminary script was developed to process a large corpus of raw legal documents. Using a Large Language Model (LLM), this script automatically extracted key structured metadata from the unstructured text, such as case_type, year, key_legal_principles, and the parties involved.
+Data Enrichment: An initial script was written to crawl a  corpus of unstructured raw legal documents. An LLM was utilized by this script to extract critical structured metadata from the unstructured text autonomously, including case_type, year, key_legal_principles, and parties.
 
-Hybrid Retrieval: When the user makes a query, the system uses a two-pronged approach to find relevant documents:
+Hybrid Retrieval: When a query is made by the user, the system employs a two-fold strategy to discover pertinent documents:
 
-Semantic Search (Gemini Embeddings): Finds documents that are conceptually similar to the query.
+Semantic Search (Gemini Embeddings): Identifies documents that are semantically close to the query.
 
-Keyword Search (TF-IDF): Finds documents that share specific legal terms or names.
+Metadata Filtering: The user is able to make use of the sidebar in the UI to apply filters, like jurisdiction or year, to limit the search results to just the most pertinent precedents.
 
-Metadata Filtering: The user can use the sidebar in the UI to apply filters, such as jurisdiction or year, to narrow down the search results to only the most relevant precedents.
+c) Dynamic Role Assignment To ensure that the system is flexible, the backend applies an LLM to automatically analyze the case description (e.g., "A man sues a parrot for defamation") and determine the plaintiff ("Man") and defendant ("Parrot") at the beginning of each debate. The lawyers are then assigned these roles so that they argue the appropriate side of any case.
 
-c) Dynamic Role Assignment
-To make the system versatile, the backend uses an LLM at the start of each debate to automatically parse the case description (e.g., "A man sues a parrot for defamation") and identify the plaintiff ("Man") and defendant ("Parrot"). These roles are then assigned to the lawyers, ensuring they argue the correct side of any given case.
+How It Works: A User's Journey The process of the user interacting with the application is an easy, step-by-step one:
+Starting a Case: A welcome screen greets the user. They can either have a whimsical case randomly generated or type in their own personal case description.
 
-4. How It Works: A User's Journey
-The user's interaction with the application is a seamless, step-by-step process:
+Starting the Debate: When the user clicks on "Start," the frontend makes a request to the backend's /start endpoint. The backend generates a new session, employs its LLM to determine the plaintiff and defendant, assigns roles to the attorneys, and returns the session information to the frontend.
 
-Starting a Case: The user is presented with a welcome screen. They can choose to either have a quirky case generated randomly or input their own custom case description.
+Watching and Judging: The primary debate screen is displayed. The user sees the details of the case and the assigned roles. They can then:
 
-Initiating the Debate: When the user clicks "Start," the frontend sends a request to the backend's /start endpoint. The backend creates a unique session, uses its LLM to identify the plaintiff and defendant, assigns roles to the lawyers, and sends the session details back to the frontend.
+Send a Message: Enter a particular question or a decision (e.g., "prosecution wins") in the input field. This triggers a request to the /run endpoint. The backend utilizes this message to conduct a RAG search and create the next set of arguments.
 
-Observing and Judging: The main debate screen appears. The user can see the case details and the assigned roles. They can then:
+Continue the Debate: If the user does not have a particular question, they can hit the "Continue Debate" button. This sends a generic "Continue" request to the backend, challenging the lawyers to argue based on the previous thing mentioned.
 
-Submit a Message: Type a specific question or a verdict (e.g., "prosecution wins") into the input box. This sends a request to the /run endpoint. The backend uses this message to perform a RAG search and generate the next round of arguments.
+Getting Arguments: With every user action, the backend processes the turn and returns the new arguments. The frontend updates this information, rebuilds the chat display, and refreshes the RAG context in the sidebar.
 
-Continue the Debate: If the user doesn't have a specific question, they can click the "Continue Debate" button. This sends a generic "Continue" message to the backend, prompting the lawyers to argue based on the last thing that was said.
+Declaring a Winner: When the user enters a winning sentence (e.g., "defense wins"), the backend recognizes this, creates the special winning and losing phrases for both lawyers, and marks the is_finished flag as True. A congratulatory message and the end of the debate are shown by the frontend.
 
-Receiving Arguments: After each user action, the backend processes the turn and sends the new arguments back. The frontend receives this data, updates the chat display, and refreshes the RAG context in the sidebar.
+Challenges Encountered and Solutions Various technical and logical issues were addressed during development:
+API Rate Limiting: The first data enrichment script, which issued a single API call per document in a fast loop, rapidly exceeded the free-tier rate limit of the Google Gemini API.
 
-Declaring a Winner: When the user types a winning phrase (e.g., "defense wins"), the backend detects this, generates the special winning and losing statements for each lawyer, and sets the is_finished flag to True. The frontend then displays a celebratory message and concludes the debate.
+Solution: The script was then changed to insert a pause between every API call by using Python's time.sleep(4). This slowed the requests to a rate within the API's free-tier limits, enabling the large dataset to be processed successfully without fail.
 
-5. Challenges Faced and Solutions
-Several technical and logical challenges were overcome during development:
+Logical Contradictions in Roles: A recurring issue caused the winning statements to not show up. This was traced to a logical contradiction in which the backend had static roles (e.g., RAG Lawyer = Defense), but the workflow had a hardcoded list that improperly linked a winning term (e.g., "prosecution wins") with the RAG Lawyer.
 
-API Rate Limiting: The initial data enrichment script, which made one API call per document in a rapid loop, quickly hit the free-tier rate limit of the Google Gemini API.
+Solution: The hardcoded lists were taken out of the workflow. The judge_input node was re-engineered to be dynamic, creating its winning term sets on-the-fly from the roles assigned at each debate beginning.
 
-Solution: The script was modified to introduce a pause between each API call using Python's time.sleep(4). This throttled the requests to a rate that was within the API's free-tier limits, allowing the large dataset to be processed successfully without errors.
+Streamlit "Double-Click" Bug: The user needed to double-click buttons for the UI to refresh. This was due to repeated use of st.rerun() in the frontend helper functions, which was interfering with Streamlit's natural state management.
 
-Logical Contradictions in Roles: A persistent bug prevented the winning statements from appearing. This was traced back to a logical conflict where the backend had fixed roles (e.g., RAG Lawyer = Defense), but the workflow had a hardcoded list that incorrectly associated a winning term (e.g., "prosecution wins") with the RAG Lawyer.
+Solution: All redundant st.rerun() calls were eliminated from the helper functions, so Streamlit could automatically and reliably perform UI updates after every interaction.
 
-Solution: The hardcoded lists were removed from the workflow. The judge_input node was redesigned to be dynamic, building its winning term sets on-the-fly based on the roles assigned at the start of each debate.
+Model Reliability for JSON Output: The original approach to requesting an LLM to provide JSON in its text reply was unreliable, tending to produce parsing errors.
 
-Streamlit "Double-Click" Bug: The user had to click buttons twice for the UI to update. This was caused by the misuse of st.rerun(), which was interrupting Streamlit's natural state management.
-
-Solution: All unnecessary st.rerun() calls were removed from the helper functions, allowing Streamlit to handle UI updates automatically and reliably after each interaction.
-
-Model Reliability for JSON Output: The initial method of asking an LLM to generate JSON in its text response was unreliable, often leading to parsing errors.
-
-Solution: The code was updated to use structured output methods (.with_structured_output for Gemini and the outlines library for open-source models), which force the model to generate a valid JSON object that strictly conforms to a Pydantic schema, eliminating parsing errors.
+Solution: The code was modified to utilize structured output functions (.with_structured_output for Gemini , which compel the model to produce a valid JSON object that conforms strictly to a Pydantic schema, thereby excluding parsing errors.
