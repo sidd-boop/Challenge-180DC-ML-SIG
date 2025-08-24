@@ -1,3 +1,4 @@
+Link: <mark> (https://youtu.be/YozrJlcCEeU) </mark>
 AI Legal Debate System: Project Report
 1. Introduction
 The AI Legal Debate System is an interactive web application designed to simulate a courtroom battle between two distinct AI-powered lawyers. The project's goal was to create an engaging and educational experience by contrasting a data-driven, factual legal style with a creative, unpredictable, and often absurd one. The user takes on the role of the Judge, initiating cases, guiding the debate, and ultimately deciding the winner. This report details the system's architecture, core features, user workflow, and the challenges overcome during its development.
