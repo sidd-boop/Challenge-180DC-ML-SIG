@@ -1,4 +1,4 @@
-#Using LLM to extract missing structured metadata for each case and save it to enrich_data.json
+
 
 
 
@@ -45,7 +45,7 @@ def enrich_cases(
     with open(raw_file_path, 'r', encoding='utf-8') as f:
         raw_cases = json.load(f)
 
-    # --- CHANGE HERE: Take only a small slice of the full dataset ---
+
     cases_to_process = raw_cases[:sample_size]
     
     enriched_cases = []
@@ -72,18 +72,19 @@ def enrich_cases(
         
         except Exception as e:
             print(f"  -> Failed to process case: {case['case_name']}. Error: {e}")
-            # In a small sample, we can just skip the failed case
+            
             continue
 
         # Keep the delay to respect the API rate limit
         time.sleep(4)
 
-    # Save the new sampled data to a separate file
+    
     with open(sampled_file_path, 'w', encoding='utf-8') as f:
         json.dump(enriched_cases, f, indent=2)
         
-    print(f"\n✅ Sample enrichment complete. {len(enriched_cases)} cases saved to '{sampled_file_path}'.")
+    print(f"\n Sample enrichment complete. {len(enriched_cases)} cases saved to '{sampled_file_path}'.")
 
 
 if __name__ == "__main__":
+
     enrich_cases()
